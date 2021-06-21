@@ -1,0 +1,50 @@
+.login-page {
+  background-color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  word-spacing: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 450px;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 3px solid black;
+  box-shadow: 5px 5px 0 black;
+  input {
+    padding: 1rem;
+    &:focus{
+      border: none rgba(229, 103, 23, 0.8);
+      box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+      outline: 0 none;
+    }
+  }
+  input[type="submit"] {
+    border-radius: 5px;
+    border: none;
+  }
+  input[type="checkbox"] {
+    height: 20px;
+    width: 20px;
+    background-color: black;
+  }
+  input:hover[type="submit"] {
+    transition: all .5s ease;
+    cursor: pointer;
+    background-color: orange;
+  }
+  .input-area {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    row-gap: 15px;
+  }
+
+}
+
+.remember-me label:hover,
+.remember-me input:hover {
+  cursor: pointer;
+}
+

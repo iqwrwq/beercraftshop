@@ -1,0 +1,21 @@
+{
+    "db_host": "localhost",
+    "db_user": "root",
+    "db_pwd": "root",
+    "db_name": "beer_craft_shop_data",
+    "user_name": "admin",
+    "user_pwd": "$2y$10$G.WVdn2m0WvFcUCPrIpXz.HK22C0l1TiDbgSmXMNeUCBIoWjfChLe",
+    "tables": {
+        "products": {
+            "id": "INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY",
+            "name": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
+            "description": "TEXT",
+            "price": "DECIMAL(10,2) NOT NULL",
+            "img_url": "VARCHAR(125)",
+            "alcohol_content": "DECIMAL(10,2)"
+        }
+    },
+    "insertDemoData": "true",
+    "demoDataInserted": "false",
+    "storefront": "on"
+}

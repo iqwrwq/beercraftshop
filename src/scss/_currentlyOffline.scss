@@ -1,0 +1,40 @@
+.page-offline{
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+  border: solid 3px #000;
+  box-shadow: 5px 5px black;
+  .box-header{
+    position: absolute;
+    align-self: center;
+    justify-self:center ;
+    top: 0px;
+    padding: 0 2rem;
+    border-radius: 150px;
+    color: #94e903;
+    font-weight: bolder;
+    font-size: 45px;
+    text-align: center;
+  }
+  img {
+    width: 150px;
+    height: 150px;
+  }
+  #hopfen_png{
+    position: absolute;
+    bottom: -80px;
+    right: -50px;
+  }
+  #weizen_png{
+    position: absolute;
+    top: -60px;
+    left: -50px;
+
+    rotate: -70deg;
+  }
+}

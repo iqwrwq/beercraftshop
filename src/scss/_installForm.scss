@@ -1,0 +1,127 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+.install-wrapper{
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.install-page{
+  font-family: 'Courier New', Courier, monospace;
+
+
+  .install-database-form, .setup-user-form{
+
+    padding: 2rem;
+    border: solid 3px black;
+    border-radius: 5px;
+    box-shadow: 5px 5px black;
+    width: 400px;
+
+
+    input{
+      padding: 15px 2rem;
+      transition: all .1s;
+      width: 340px;
+      &:focus{
+        border: none rgba(229, 103, 23, 0.8);
+        box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+        outline: 0 none;
+      }
+    }
+    .input-area{
+      display: flex;
+      flex-direction: column;
+      margin-top: 1rem;
+      .demo-data-space{
+        margin: 10px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        input{
+          width: 100px;
+          &:hover{
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .install-database-form{
+    background-color: #ffd7d7;
+    z-index: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .setup-user-form{
+    overflow: hidden;
+    background-color: #fff;
+    z-index: 10;
+    position: absolute;
+    top: 150%;
+    left: 50%;
+  }
+  input[type=button] , input[type=submit]  {
+    margin-top: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+    grid-area: button;
+    transition: all .3s;
+    &:hover {
+      background-color: rgb(254, 152, 27);
+      cursor: pointer;
+    }
+  }
+}
+
+.placeForm{
+  animation: 1s ease-out 0s 1 moveToPlace;
+  animation-fill-mode: forwards;
+}
+
+@keyframes moveToPlace {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    left: calc(50% - 150px);
+    transform: translate(-50px ,-120vh);
+  }
+}
+
+#myVideo{
+  position: fixed;
+  z-index: -15;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  min-width: 100%;
+  min-height: 150%;
+  opacity: 0.2;
+}
+
+
+
+.isa_error {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 50px auto;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 10px 0px;
+  padding:12px;
+  max-height: 100px;
+  max-width: 450px;
+  color: #D8000C;
+  background-color: #FFD2D2;
+  i{
+    font-size:2em;
+  }
+}
