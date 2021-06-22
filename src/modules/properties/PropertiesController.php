@@ -16,7 +16,7 @@ class PropertiesController extends Properties
      * @param $data
      * @return bool
      */
-    public function init($data)
+    public function init($data): bool
     {
         $this->write($data);
         return self::check($this->properties_path);
@@ -26,7 +26,7 @@ class PropertiesController extends Properties
      * @param $path
      * @return bool
      */
-    public static function check($path)
+    public static function check($path): bool
     {
         if (!file_exists($path)) return false;
         $strJsonFileContents = file_get_contents($path);

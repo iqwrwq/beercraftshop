@@ -18,7 +18,7 @@ class Installer
      * @param $properties_path
      * @return bool
      */
-    public static function check($properties_path)
+    public static function check($properties_path): bool
     {
         if (PropertiesController::check($properties_path)) {
             $properties = PropertiesController::getContent($properties_path);

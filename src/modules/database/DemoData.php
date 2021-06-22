@@ -9,10 +9,10 @@ class DemoData
     public function insert_demo_data(DataBaseController $dataBaseController, PropertiesController $propertiesController)
     {
         if ($propertiesController->get("insertDemoData") === "true" && $propertiesController->get("demoDataInserted") === "false") {
-            $json = file_get_contents("https://iqwrwq.github.io/projects/beercraftshop/demodata/products.json");
+            $json = file_get_contents("https://iqwrwq.github.io/beercraftshop/data/products/products.json");
             $data = json_decode($json);
             $product_image_path = "../../../public/resources/images/products/";
-            $api_url = "https://iqwrwq.github.io/projects/beercraftshop/demodata/image/products/";
+            $api_url = "https://iqwrwq.github.io/beercraftshop/data/products/img/";
             foreach ($data as $product) {
                 $product_data = array();
                 foreach ($product as $key => $value) {
