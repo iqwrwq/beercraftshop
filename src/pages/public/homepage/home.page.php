@@ -30,7 +30,7 @@
             <div class="item-showcase">
                 <?php if ($products):
                     while ($product = mysqli_fetch_array($products)):?>
-                        <?php require $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/product_item.php" ?>
+                        <?php require $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/productItem.php" ?>
                     <?php endwhile;endif; ?>
             </div>
         </div>

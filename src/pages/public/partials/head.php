@@ -7,6 +7,6 @@
     <link rel="stylesheet" href="/BeerCraftShop/public/css/main.css">
     <link rel="shortcut icon" type="image/x-icon" href="/BeerCraftShop/public/resources/images/hopfen.png">
     <script src="https://kit.fontawesome.com/ee02357a59.js" crossorigin="anonymous"></script>
-    <title>Beer Craft Shop</title>
+    <title>BeerCraft/Shop</title>
 </head>
 <body>
