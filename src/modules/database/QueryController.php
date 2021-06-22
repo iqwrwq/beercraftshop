@@ -22,7 +22,13 @@ class QueryController
         return "CREATE TABLE IF NOT EXISTS $db_name.$table_name($tableQuery->table_query_string)";
     }
 
-    public function dataToInsertSql($table,$data){
+    /**
+     * @param $table
+     * @param $data
+     * @return string
+     */
+    public function dataToInsertSql($table,$data): string
+    {
         $table_query_string = "INSERT INTO $table VALUES(";
         foreach($data as $key => $field){
             $table_query_string .= ($key === "id" ? "NULL" : "'" . $field . "'") . ",";

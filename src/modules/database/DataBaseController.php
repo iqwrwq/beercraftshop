@@ -35,7 +35,7 @@ class DataBaseController extends DataBase
      * @param $table_name
      * @return bool
      */
-    public function init($table_data, $table_name)
+    public function init($table_data, $table_name): bool
     {
         if ($this->database_query("CREATE DATABASE IF NOT EXISTS $this->db_name ")) {
             $queryController = new QueryController();
@@ -74,11 +74,11 @@ class DataBaseController extends DataBase
 
 
     /**
-     * @return true|false
+     * @return void
      */
     private function goodToGo()
     {
-        return $this->connection->select_db($this->db_name);
+        $this->connection->select_db($this->db_name);
     }
 
     /**
@@ -107,43 +107,107 @@ class DataBaseController extends DataBase
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (checkData()) {
-        if (isset($_FILES["new_product_image"]) && $_FILES["photo"]["error"] == 0) {
-            $allowed = array("jpg" => "image/jpg", "jpeg" => "image/jpeg", "gif" => "image/gif", "png" => "image/png");
-            $ext = pathinfo($_FILES["new_product_image"]["name"], PATHINFO_EXTENSION);
-            $filebase = randomKey();
-            $filename = $filebase . "." . $ext;
-            $filetype = $_FILES["new_product_image"]["type"];
-            $filesize = $_FILES["new_product_image"]["size"];
-            $file_destination = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/public/resources/images/products/";
-
-            if (!array_key_exists($ext, $allowed)) {
-                session_start();
-                $_SESSION['NEW_PRODUCT_ERROR'] = "Creation Error: Invalid file type!";
-                header("Location: /BeerCraftShop/public/admin");
-            }
-
-            $maxsize = 5 * 1024 * 1024;
-            if ($filesize > $maxsize) {
-                session_start();
-                $_SESSION['NEW_PRODUCT_ERROR'] = "Creation Error: File is too big!";
-                header("Location: /BeerCraftShop/public/admin");
-            }
-
-            if (in_array($filetype, $allowed)) {
-                if (file_exists($file_destination . $filename)) {
-                    echo $filename . " is already exists.";
-                } else {
-                    move_uploaded_file($_FILES["new_product_image"]["tmp_name"], $file_destination . $filename);
-                    echo "Your file was uploaded successfully.";
-                }
-            } else {
-                echo "Error: There was a problem uploading your file. Please try again.";
-            }
-        }
+        $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
+        $propertiesController = new \PropertiesController($properties_path);
+        $dataBaseController = new DataBaseController(
+            $propertiesController->get("db_host"),
+            $propertiesController->get("db_user"),
+            $propertiesController->get("db_pwd"),
+            $propertiesController->get("db_name")
+        );
+        $newProduct = array(
+            "id" => "NULL",
+            "name" => $_POST["addItemName"],
+            "description" => returnDescriptionFileContent(),
+            "price" => $_POST["addItemPrice"],
+            "img_url" => handleUploadedProductImageReturnURL(),
+            "alcohol_content" => $_POST["addItemAlcoholContent"]
+        );
+        $dataBaseController->insertProduct("products", $newProduct);
         unset($_POST);
         unset($_FILES);
         header("Location: /BeerCraftShop/public/admin");
+    } else {
+        returnWithError("Creation Error: Could not create item, check data!");
     }
+}
+
+/**
+ * @return string
+ */
+function returnDescriptionFileContent():string
+{
+    $uploadedFile = $_FILES["addItemDescription"]["tmp_name"];
+    $descriptionFile = fopen($uploadedFile , "r");
+    return fread($descriptionFile, filesize($uploadedFile));
+}
+
+/**
+ * @return string
+ */
+function handleUploadedProductImageReturnURL(): string
+{
+    $allowed = array("jpg" => "image/jpg", "jpeg" => "image/jpeg", "gif" => "image/gif", "png" => "image/png");
+    $ext = pathinfo($_FILES["addItemImage"]["name"], PATHINFO_EXTENSION);
+    $filebase = randomKey();
+    $filename = $filebase . "." . $ext;
+    $filetype = $_FILES["addItemImage"]["type"];
+    $filesize = $_FILES["addItemImage"]["size"];
+    $file_destination = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/public/resources/images/products/";
+
+    if (!array_key_exists($ext, $allowed)) {
+        returnWithError("Creation Error: Wrong File Format!");
+    }
+
+    $maxsize = 5 * 1024 * 1024;
+    if ($filesize > $maxsize) {
+        returnWithError("Creation Error: File is too big!");
+    }
+
+    if (in_array($filetype, $allowed)) {
+        if (file_exists($file_destination . $filename)) {
+            returnWithError("Creation Error: File already Exists!");
+        } else {
+            move_uploaded_file($_FILES["addItemImage"]["tmp_name"], $file_destination . $filename);
+        }
+    } else {
+        returnWithError("Creation Error: Fatal Error!");
+    }
+    return $filebase;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (checkData()) {
+        $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
+        $propertiesController = new \PropertiesController($properties_path);
+        $dataBaseController = new DataBaseController(
+            $propertiesController->get("db_host"),
+            $propertiesController->get("db_user"),
+            $propertiesController->get("db_pwd"),
+            $propertiesController->get("db_name")
+        );
+        $newProduct = array(
+            "id" => "NULL",
+            "name" => $_POST["addItemName"],
+            "description" => returnDescriptionFileContent(),
+            "price" => $_POST["addItemPrice"],
+            "img_url" => handleUploadedProductImageReturnURL(),
+            "alcohol_content" => $_POST["addItemAlcoholContent"]
+        );
+        $dataBaseController->insertProduct("products", $newProduct);
+        unset($_POST);
+        unset($_FILES);
+        header("Location: /BeerCraftShop/public/admin");
+    } else {
+        returnWithError("Creation Error: Could not create item, check data!");
+    }
+}
+
+function returnWithError($msg)
+{
+    session_start();
+    $_SESSION['NEW_PRODUCT_ERROR'] = $msg;
+    header("Location: /BeerCraftShop/public/admin");
 }
 
 /**
@@ -161,13 +225,15 @@ function randomKey(): string
     return $randomString;
 }
 
-
+/**
+ * @return bool
+ */
 function checkData(): bool
 {
     return
-        isset($_POST["new_product_image"]) &
-        isset($_POST["new_product_name"]) &
-        isset($_POST["new_product_alcoholContent"]) &
-        isset($_POST["new_product_price"]) &
-        isset($_POST["new_product_description"]);
+        isset($_POST["addItemName"]) &
+        isset($_POST["addItemAlcoholContent"]) &
+        isset($_POST["addItemPrice"]) &
+        isset($_FILES["addItemImage"]) &
+        isset($_FILES["addItemDescription"]);
 }

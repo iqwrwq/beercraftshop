@@ -820,10 +820,10 @@ footer .links .notice-link {
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
-  left: 100%;
+  right: 100%;
   border-width: 7px;
   border-style: solid;
-  border-color: transparent transparent transparent #fff;
+  border-color: transparent #fff transparent transparent;
 }
 
 .tooltip:hover .tooltiptext {
@@ -882,24 +882,25 @@ footer .links .notice-link {
   grid-template-rows: 50px 50px 50px 50px 50px;
   align-items: center;
 }
-.add-item-form form .form-content input {
+.add-item-form form .form-content input, .add-item-form form .form-content button {
+  margin: 5px;
   padding: 15px;
   transition: all 0.1s;
 }
-.add-item-form form .form-content input:focus {
+.add-item-form form .form-content input:focus, .add-item-form form .form-content button:focus {
   border: none;
   border-color: rgba(229, 103, 23, 0.8);
   box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
   outline: 0 none;
 }
-.add-item-form form .form-content input[type=submit] {
+.add-item-form form .form-content input[type=submit], .add-item-form form .form-content button {
   font-size: 15px;
   border-radius: 5px;
   border: none;
   transition: all 0.3s;
   margin-top: 5px;
 }
-.add-item-form form .form-content input[type=submit]:hover {
+.add-item-form form .form-content input[type=submit]:hover, .add-item-form form .form-content button:hover {
   background-color: #fe981b;
   cursor: pointer;
 }
@@ -958,7 +959,6 @@ footer .links .notice-link {
   font-size: 15px;
   border-radius: 5px;
   border: none;
-  transition: all 0.3s;
   margin-top: 20px;
   width: 150px;
   transition: all ease 0.3s;
@@ -1853,8 +1853,6 @@ dt {
 }
 
 input[type=file]:hover {
-  border: solid #fe981b 3px;
-  border-radius: 15px;
   cursor: pointer;
 }
 

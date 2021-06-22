@@ -9,16 +9,22 @@
         <div class="form-content">
             <span>Name:</span>
             <input type="text" name="addItemName" required>
+
             <span>Description:(desc.txt)</span>
             <input type="file" name="addItemDescription" required>
+
             <label for="fileSelect">Image:</label>
-            <input type="file" name="photo" id="fileSelect">
+            <input type="file" name="addItemImage" required>
+
             <span>Alcohol Content:</span>
             <input type="text" name="addItemAlcoholContent" required>
+
             <span>Price:</span>
             <input type="text" name="addItemPrice" required>
+
             <input type="submit" value="create">
-            <span>            </span>
+
+            <button>Cancel</button>
         </div>
     </form>
 </div>
