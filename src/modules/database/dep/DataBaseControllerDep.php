@@ -5,13 +5,13 @@
 
 namespace BeerCraftShop\src\modules\database;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . "DataBase.php";
-require_once __DIR__ . DIRECTORY_SEPARATOR . "QueryController.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR;
+require_once __DIR__ . DIRECTORY_SEPARATOR;
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
 
 use mysqli_result;
 
-class DataBaseController extends DataBase
+class DataBaseControllerDep extends DataBase
 {
     private $db_name;
 
@@ -38,7 +38,7 @@ class DataBaseController extends DataBase
     public function init($table_data, $table_name): bool
     {
         if ($this->database_query("CREATE DATABASE IF NOT EXISTS $this->db_name ")) {
-            $queryController = new QueryController();
+            $queryController = new QueryControllerDep();
             if ($this->database_query($queryController->setUpDataBaseQuery($this->db_name, $table_data, $table_name))) {
                 $this->goodToGo();
             } else {
@@ -56,7 +56,7 @@ class DataBaseController extends DataBase
      */
     public function insertProduct($table, $data)
     {
-        $queryController = new QueryController();
+        $queryController = new QueryControllerDep();
         $sql = $queryController->dataToInsertSql($table, $data);
         $this->connection->select_db($this->db_name);
         $this->connection->query($sql);
@@ -108,8 +108,8 @@ class DataBaseController extends DataBase
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (checkData()) {
         $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
-        $propertiesController = new \PropertiesController($properties_path);
-        $dataBaseController = new DataBaseController(
+        $propertiesController = new \PropertiesDepControllerDep($properties_path);
+        $dataBaseController = new DataBaseControllerDep(
             $propertiesController->get("db_host"),
             $propertiesController->get("db_user"),
             $propertiesController->get("db_pwd"),
@@ -179,8 +179,8 @@ function handleUploadedProductImageReturnURL(): string
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (checkData()) {
         $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
-        $propertiesController = new \PropertiesController($properties_path);
-        $dataBaseController = new DataBaseController(
+        $propertiesController = new \PropertiesDepControllerDep($properties_path);
+        $dataBaseController = new DataBaseControllerDep(
             $propertiesController->get("db_host"),
             $propertiesController->get("db_user"),
             $propertiesController->get("db_pwd"),

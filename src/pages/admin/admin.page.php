@@ -2,8 +2,8 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/DataBaseController.php";
 
-$properties = PropertiesController::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-$dataBaseController = new \BeerCraftShop\src\modules\database\DataBaseController($properties["db_host"], $properties["db_user"], $properties["db_pwd"], $properties["db_name"]);
+$properties = PropertiesDepControllerDep::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
+$dataBaseController = new \BeerCraftShop\src\modules\database\DataBaseControllerDep($properties["db_host"], $properties["db_user"], $properties["db_pwd"], $properties["db_name"]);
 $products = $dataBaseController->getAllProducts();
 ?>
 

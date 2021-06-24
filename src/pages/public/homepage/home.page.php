@@ -1,10 +1,14 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
-    require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/DataBaseController.php";
 
-    $properties = PropertiesController::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-    $dataBaseController = new \BeerCraftShop\src\modules\database\DataBaseController($properties["db_host"], $properties["db_user"], $properties["db_pwd"], $properties["db_name"]);
-    $products = $dataBaseController->getAllProducts();
+use config\ShopConfig;
+use modules\database\rows\ShopDataBaseHandler;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
+
+$shopConfig = new ShopConfig();
+$shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
+$products = $shopDataBaseHandler->getAllProducts();
 ?>
 <div class="main-site-wrapper">
     <div class="content">
@@ -28,6 +32,7 @@
                 </div>
             </div>
             <div class="item-showcase">
+
                 <?php if ($products):
                     while ($product = mysqli_fetch_array($products)):?>
                         <?php require $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/productItem.php" ?>

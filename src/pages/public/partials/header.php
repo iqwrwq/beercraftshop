@@ -10,9 +10,9 @@
         <a href="/BeerCraftShop/public/contact.php" class="tab">Kontakt</a>
     </div>
     <nav class="top-nav-login">
-        <a class="register-link" href="#">Register</a>
-        <a class="login-link" href="#">Login</a>
-        <i class="fas fa-user"></i>
+        <a class="register-link" href="/BeerCraftShop/public/register.php">Register</a>
+        <a class="login-link" href="/BeerCraftShop/public/login.php">Login</a>
+        <a href="/BeerCraftShop/public/profile.php"><i class="fas fa-user"></i></a>
     </nav>
 </header>
 

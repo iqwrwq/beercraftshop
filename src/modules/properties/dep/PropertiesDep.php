@@ -3,7 +3,7 @@
  * @authors  Sajad, Arthur, Simon, Tristan
  */
 
-class Properties
+class PropertiesDep
 {
     protected $properties_path;
 

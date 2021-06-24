@@ -3,9 +3,9 @@
  * @authors  Sajad, Arthur, Simon, Tristan
  */
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . "Properties.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR;
 
-class PropertiesController extends Properties
+class PropertiesDepControllerDep extends PropertiesDep
 {
     public function __construct($properties_path)
     {

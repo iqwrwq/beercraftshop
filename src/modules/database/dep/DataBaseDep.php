@@ -3,12 +3,12 @@
  * @authors  Sajad, Arthur, Simon, Tristan
  */
 
-namespace BeerCraftShop\src\modules\database;
+namespace modules\database;
 
-use DemoData;
 use mysqli;
+use mysqli_result;
 
-class DataBase
+class DataBaseDep
 {
     /**
      * @var mysqli

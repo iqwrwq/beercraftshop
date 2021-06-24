@@ -5,7 +5,7 @@
 
 namespace BeerCraftShop\src\modules\database;
 
-class TableQuery
+class TableQueryDep
 {
     public $table_query_string;
 

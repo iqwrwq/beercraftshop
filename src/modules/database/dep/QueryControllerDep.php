@@ -5,9 +5,9 @@
 
 namespace BeerCraftShop\src\modules\database;
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . "TableQuery.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR;
 
-class QueryController
+class QueryControllerDep
 {
 
     /**
@@ -18,7 +18,7 @@ class QueryController
      */
     public function setUpDataBaseQuery(string $db_name, array $table_data, string $table_name): string
     {
-        $tableQuery = new TableQuery($table_data);
+        $tableQuery = new TableQueryDep($table_data);
         return "CREATE TABLE IF NOT EXISTS $db_name.$table_name($tableQuery->table_query_string)";
     }
 
