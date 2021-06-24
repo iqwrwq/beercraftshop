@@ -10,9 +10,9 @@ $products = $dataBaseController->getAllProducts();
 <div class="main-site-wrapper">
 
     <div class="admin-page" id="adminPage">
-        <?php require_once "partials/adminPageNav.php"?>
+        <?php require_once "partials/adminPageNav.php" ?>
 
-        <?php require_once "partials/adminGraphs.php"?>
+        <?php require_once "partials/adminGraphs.php" ?>
 
         <div class="content">
             <?php
@@ -21,7 +21,6 @@ $products = $dataBaseController->getAllProducts();
                 echo "<tr class='item-row'><td class='nameField'>" . $product["id"] . "</td><td class='descriptionField'>" . $product["name"] . "</td><td class='priceField'>" . substr($product["description"], 0, 55) . "[...]" . "</td><td class='priceField'>" . $product["img_url"] . "</td><td class='priceField'>" . $product["alcohol_content"] . "</td><td class='priceField'>" . $product["price"] . "</td></tr>";
             }
             echo "<tr class='add-row' id='add-btn'><td colspan=6><i class='fas fa-plus-square' ></i></td></tr></table>";
-
             ?>
         </div>
     </div>
@@ -29,9 +28,9 @@ $products = $dataBaseController->getAllProducts();
 
     <div class="overlay hide" id="overlay"></div>
 
-    <?php require_once "partials/addItemForm.php"?>
+    <?php require_once "partials/addItemForm.php" ?>
 
-    <?php require_once "partials/changeItemForm.php"?>
+    <?php require_once "partials/changeItemForm.php" ?>
 
     <div id="loading-overlay">
         <img id="loading-gif" src="/BeerCraftShop/public/resources/images/loading.gif" alt="funny GIF" width="100%">
@@ -63,6 +62,7 @@ $products = $dataBaseController->getAllProducts();
                 changeItemForm.classList.remove("hide");
                 overlay.classList.remove("hide");
                 changeBtn.disabled = true;
+                document.querySelector("#oldIdField").value = element.cells[0].innerHTML;
                 document.querySelector("#oldNameField").value = element.cells[1].innerHTML;
                 document.querySelector("#oldDescField").value = element.cells[2].innerHTML;
                 document.querySelector("#oldImageField").value = element.cells[3].innerHTML;

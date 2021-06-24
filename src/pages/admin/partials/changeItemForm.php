@@ -7,10 +7,10 @@
                 </span>
         </div>
         <div class="change-form-content">
-
+            <input name="oldIdField" id="oldIdField" class="hide" type="text">
             <input name="oldNameField" id="oldNameField" class="hide" type="text">
             <input name="oldDescField" id="oldDescField" class="hide" type="text">
-            <input name="oldImageField" id="oldImageField" class="hide" type="text">
+            <input name="changeFormImageField" id="oldImageField" class="hide" type="text">
             <input name="oldAlcoholContentField" id="oldAlcoholContentField" class="hide" type="text">
             <input name="oldPriceField" id="oldPriceField" class="hide" type="text">
 

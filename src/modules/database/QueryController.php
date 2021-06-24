@@ -37,4 +37,24 @@ class QueryController
         $table_query_string .= ")";
         return $table_query_string;
     }
+
+    public function removeByIdSql($table, $id){
+        return "DELETE FROM $table WHERE id='$id';";
+    }
+
+    /**
+     * @param $table
+     * @param array $data
+     */
+    public function updateByIdSql($table, $data){
+        $updateStr = "";
+        foreach($data as $key => $value){
+            if ($key === "id"){
+                continue;
+            }
+            $updateStr .= "$key=$value,";
+        }
+        $updateStr = rtrim($updateStr, ", ");
+        return "UPDATE $table SET " . $updateStr . " WHERE id = " . $data["id"] . ";";
+    }
 }
