@@ -7,7 +7,8 @@
             "db_name": "beer_craft_shop_database"
         },
         "installed": "true",
-        "storefront": "on"
+        "storefront": "off",
+        "fast_mode": "false"
     },
     "tables": {
         "products": {
@@ -23,12 +24,12 @@
             "firstname": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
             "lastname": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
             "email": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
-            "password": "VARCHAR(125) NOT NULL"
+            "password": "VARCHAR(255) NOT NULL"
         },
         "admins": {
             "id": "INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY",
             "login_name": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
-            "password": "VARCHAR(125) NOT NULL"
+            "password": "VARCHAR(255) NOT NULL"
         }
     }
 }

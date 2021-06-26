@@ -1,7 +1,7 @@
 $inner-nav-color: rgb(52, 58, 64);
 
 .admin-page-wrapper {
-  padding: 0 2rem;
+  padding: 0 3rem;
 }
 
 .admin-page-nav {
@@ -131,6 +131,39 @@ $inner-nav-color: rgb(52, 58, 64);
     color: darkgreen;
     font-size: 20px;
   }
+}
+
+#edit-product-btn{
+  padding: .6rem;
+  background-color: #fe981b;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    background-color: #f58c0a;
+  }
+  i{
+    color: #a35b02;
+  }
+
+}
+
+#delete-product-btn{
+  padding: .6rem;
+  color: #e55656;
+  background-color: #A40808;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    background-color: #de0a0a;
+  }
+  i{
+    color: #e55656;
+  }
+
 }
 
 #description-panel{

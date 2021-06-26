@@ -36,7 +36,7 @@ class ShopDataBaseQueryBuilder
         $insertItemSql = "INSERT INTO " . $table->value . " VALUES(";
         foreach ($row->getData() as $key => $field) {
             if ($key === "password") {
-                $insertItemSql .= "'" . password_hash($key, PASSWORD_DEFAULT) . "',";
+                $insertItemSql .= "'" . password_hash($key, PASSWORD_BCRYPT) . "',";
             } else {
                 $insertItemSql .= ($key === "id" ? "NULL" : "'" . $field . "'") . ",";
             }

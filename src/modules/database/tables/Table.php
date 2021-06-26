@@ -4,6 +4,8 @@
 namespace modules\database\tables;
 
 require_once "UserTable.php";
+require_once "AdminTable.php";
+require_once "ProductTable.php";
 
 
 abstract class Table
@@ -47,9 +49,12 @@ abstract class Table
 
     public function getRowFrom(string $where, string $is)
     {
-        foreach ($this->rows as $row) {
-            if ($where === $row[$is]) {
-                return $row;
+        foreach ($this->rows as $row){
+            $data = $row->getData();
+            foreach ($data as $prop => $value){
+                if($prop === $where && $value === $is){
+                    return $row;
+                }
             }
         }
         return false;

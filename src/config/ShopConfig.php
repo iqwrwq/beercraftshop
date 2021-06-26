@@ -11,6 +11,7 @@ class ShopConfig
     private $tables;
     private $isShopInstalled;
     private $storeFrontStatus;
+    private $fastModeStatus;
 
     public function __construct()
     {
@@ -20,6 +21,7 @@ class ShopConfig
         $this->tables = $json["tables"];
         $this->isShopInstalled = $json["config"]["installed"] === "true";
         $this->storeFrontStatus = $json["config"]["storefront"] === "on";
+        $this->fastModeStatus = $json["config"]["fast_mode"] === "true";
     }
 
     public function configure(array $data)
@@ -77,6 +79,19 @@ class ShopConfig
         }
     }
 
+    public function getFastMode():bool
+    {
+        return $this->fastModeStatus;
+    }
+
+    public function toggleFastMode(){
+        if ($this->fastModeStatus){
+            $this->set("fast_mode", "false");
+        }else{
+            $this->set("fast_mode", "true");
+        }
+    }
+
     private function decode()
     {
         $configFileJson = file_get_contents($this->configFile);
@@ -93,6 +108,13 @@ class ShopConfig
 if (isset($_POST["storeFrontToggle"])){
     $shopConfig = new ShopConfig();
     $shopConfig->toggleStoreFront();
+    unset($_POST);
+    header("Location: /BeerCraftShop/public/admin/");
+}
+
+if (isset($_POST["fastModeToggle"])){
+    $shopConfig = new ShopConfig();
+    $shopConfig->toggleFastMode();
     unset($_POST);
     header("Location: /BeerCraftShop/public/admin/");
 }

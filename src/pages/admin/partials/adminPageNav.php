@@ -1,16 +1,15 @@
-<nav class="admin-nav">
-    <a href="/BeerCraftShop/public/admin" class="logo-container">
-        <img id="logo-icon" style="max-width: 100px; max-height: 100px"
-             src="/BeerCraftShop/public/resources/images/logo.png">
-        <span>/ADMIN</span>
+<nav class="admin-page-nav">
+    <a href="/BeerCraftShop/public/admin" class="admin-logo">
+        <img style="height: 50px" id="logo-icon" src="/BeerCraftShop/public/resources/images/logo.png">
     </a>
-    <span class="status tooltip">
-            <form action="/BeerCraftShop/src/modules/install/Authorizer.php" method="POST">
-                <button type="submit" name="toggleStorefront" onclick="displayLoadingOverlay()"
-                        class="fas fa-power-off current-<?php echo $properties["storefront"] === "on" ? "on" : "off" ?>
-                " id="onOff-btn"></button>
-                <span class="tooltiptext"><span style="color:red">OFF</span>/<span
-                        style="color:lime">ON</span> STOREFRONT</span>
-            </span>
-    </form>
+    <div class="navigation-bar">
+        <a class=" navigation-bar--item" href="#">
+            <i class="fas fa-user"></i>
+            <span class="username">User</span>
+        </a>
+        <a name="logout" type="submit" class="navigation-bar--item logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
 </nav>

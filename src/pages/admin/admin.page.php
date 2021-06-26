@@ -21,21 +21,7 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
 
 <div class="admin-page-wrapper">
 
-    <nav class="admin-page-nav">
-        <a href="/BeerCraftShop/public/" class="admin-logo">
-            <img style="height: 50px" id="logo-icon" src="/BeerCraftShop/public/resources/images/logo.png">
-        </a>
-        <div class="navigation-bar">
-            <a class=" navigation-bar--item" href="#">
-                <i class="fas fa-user"></i>
-                <span class="username">arthur</span>
-            </a>
-            <a name="logout" type="submit" class="navigation-bar--item logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
-    </nav>
+    <?php require_once "partials/adminPageNav.php" ?>
 
     <section class="upper-section">
         <div class="user-table">
@@ -44,7 +30,7 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
                 <div class="table-count"><span class="count"><?php echo $userTable->count() ?></span></div>
             </div>
             <div class="user-table--content">
-                <table class="userTable">
+                <table class="tableTemplate userTable">
                     <thead>
                     <tr>
                         <?php foreach ($userTable->getFormat() as $userHead): ?>
@@ -55,11 +41,11 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
                     <tbody>
                     <?php foreach ($userTable->getRows() as $userRow): ?>
                         <tr>
-                                <td><?php echo $userRow->getId() ?></td>
-                                <td><?php echo $userRow->getFirstName() ?></td>
-                                <td><?php echo $userRow->getLastName() ?></td>
-                                <td><?php echo $userRow->getEmail() ?></td>
-                                <td><?php echo $userRow->getPassword() ?></td>
+                            <td><?php echo $userRow->getId() ?></td>
+                            <td><?php echo $userRow->getFirstName() ?></td>
+                            <td><?php echo $userRow->getLastName() ?></td>
+                            <td><?php echo $userRow->getEmail() ?></td>
+                            <td><?php echo $userRow->getPassword() !== null ? "true" : "false" ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -75,42 +61,34 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
                     <i class="fas fa-toggle-on <?php echo $shopConfig->getIsStoreFrontOpen() ? "on" : "off" ?>"></i>
                 </button>
             </form>
-            <form class="config-panel--item" action="#">
-                <label for="storeFrontToggle">Deny Users</label>
-                <button name="storeFrontToggle" type="submit" class="toggle-btn">
-                    <i class="fas fa-toggle-on <?php echo false ? "on" : "off" ?>"></i>
-                </button>
-            </form>
-            <form class="config-panel--item" action="#">
-                <label for="storeFrontToggle">Translate</label>
-                <button name="storeFrontToggle" type="submit" class="toggle-btn">
-                    <i class="fas fa-toggle-on <?php echo false ? "on" : "off" ?>"></i>
-                </button>
-            </form>
-            <form class="config-panel--item" action="#">
-                <label for="storeFrontToggle">Fast Mode</label>
-                <button name="storeFrontToggle" type="submit" class="toggle-btn">
-                    <i class="fas fa-toggle-on <?php echo false ? "on" : "off" ?>"></i>
+            <form class="config-panel--item" method="post" action="/BeerCraftShop/src/config/ShopConfig.php">
+                <label>Fast Modus</label>
+                <button name="fastModeToggle" type="submit" class="toggle-btn">
+                    <i class="fas fa-toggle-on <?php echo $shopConfig->getFastMode() ? "on" : "off" ?>"></i>
                 </button>
             </form>
         </div>
     </section>
+
+
     <section class="content-section">
         <div class="table--header table-details">
             <div class="table-name"><span class="title">Products</span></div>
-            <button id="add-product-btn" onclick="">
+            <button id="add-product-btn"
+                    onclick="window.location='/BeerCraftShop/public/admin/edit.php'">
                 <i class="fas fa-plus-square"></i>
                 <span class="txt">create new product</span>
             </button>
             <div class="table-count"><span class="count"><?php echo $productTable->count() ?></span></div>
         </div>
-        <table class="userTable">
+        <table class="tableTemplate productsTable">
             <thead>
             <tr>
                 <th></th>
                 <?php foreach ($productTable->getFormat() as $productHead): ?>
                     <th><?php echo $productHead ?></th>
                 <?php endforeach; ?>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
@@ -127,7 +105,20 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
                     <td><?php echo $productRow->getPrice() ?>€</td>
                     <td><?php echo $productRow->getImgUrl() ?></td>
                     <td><?php echo $productRow->getPercentage() ?>%</td>
-                    <td><a href="">edit</a></td>
+                    <td>
+                        <button id="edit-product-btn"
+                                onclick="window.location='/BeerCraftShop/public/admin/edit.php?id=<?php echo $productRow->getId() ?>'">
+                            <i class="fas fa-edit"></i>
+                            <span class="txt">Edit</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id="delete-product-btn"
+                                onclick="window.location='/BeerCraftShop/public/admin/delete.php?id=<?php echo $productRow->getId() ?>'">
+                            <i class="fas fa-trash-alt"></i>
+                            <span class="txt">Delete</span>
+                        </button>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -136,104 +127,6 @@ $userTable = $shopDataBaseHandler->getAll($userTableType);
     </section>
 
 </div>
-<div class="hide" id="description-panel"></div>
-
-<div class="overlay hide" id="overlay"></div>
-
-<?php require_once "partials/addItemForm.php" ?>
-
-<?php require_once "partials/changeItemForm.php" ?>
-
-<div id="loading-overlay">
-    <img id="loading-gif" src="/BeerCraftShop/public/resources/images/loading.gif" alt="GIF" width="100%">
-</div>
-<script>
-    addRowButton = document.querySelector("#add-btn");
-    overlay = document.querySelector("#overlay");
-    addItemForm = document.querySelector("#add-item-form");
-    addItemInnerForm = document.querySelector("#inner-form");
-    descriptionContentData = document.querySelectorAll(".description-content-data")
-    viewButtons = document.querySelectorAll(".show-desc-btn");
-    descriptionPanel = document.querySelector("#description-panel")
-
-    viewButtons.forEach(element => {
-        element.addEventListener("click", () => {
-            descriptionPanel.classList.remove("hide");
-            overlay.classList.remove("hide");
-            window.addEventListener('click', function (e) {
-                if (overlay.contains(e.target)) {
-                    overlay.classList.add("hide");
-                    descriptionPanel.classList.add("hide");
-                }
-            });
-        })
-    })
-
-    addRowButton.addEventListener("click", () => {
-        addItemForm.classList.remove("hide");
-        overlay.classList.remove("hide");
-        window.addEventListener('click', function (e) {
-            if (overlay.contains(e.target)) {
-                addItemInnerForm.reset();
-                addItemForm.classList.add("hide");
-                overlay.classList.add("hide");
-            }
-        });
-    })
-    changeBtn = document.querySelector("#changeBtn");
-    changeItemForm = document.querySelector("#change-item-form");
-    changeItemInnerForm = document.querySelector("#inner-change-form");
-    itemRows = document.querySelectorAll('.item-row');
-    itemRows.forEach(element => {
-        element.addEventListener("click", () => {
-            changeItemForm.classList.remove("hide");
-            overlay.classList.remove("hide");
-            changeBtn.disabled = true;
-            document.querySelector("#oldNameField").value = element.cells[1].innerHTML;
-            document.querySelector("#oldDescField").value = element.cells[2].innerHTML;
-            document.querySelector("#oldImageField").value = element.cells[3].innerHTML;
-            document.querySelector("#oldAlcoholContentField").value = element.cells[4].innerHTML;
-            document.querySelector("#oldPriceField").value = element.cells[5].innerHTML;
-
-            document.querySelector("#changeFormNameField").value = element.cells[1].innerHTML;
-            document.querySelector("#changeFormDescField").value = element.cells[2].innerHTML;
-            document.querySelector("#selectedItemImage").src = "/BeerCraftShop/public/resources/images/products/" + element.cells[3].innerHTML + ".jpg";
-            document.querySelector("#changeFormAlcoholContentField").value = element.cells[4].innerHTML;
-            document.querySelector("#changeFormPriceField").value = element.cells[5].innerHTML;
-            document.querySelector("#changeFormNameField").addEventListener("change", () => {
-                unlockChangeButton();
-            });
-            document.querySelector("#changeFormDescField").addEventListener("change", () => {
-                unlockChangeButton()
-            });
-            document.querySelector("#changeFormImageField").addEventListener("change", () => {
-                unlockChangeButton()
-            });
-            document.querySelector("#changeFormAlcoholContentField").addEventListener("change", () => {
-                unlockChangeButton()
-            });
-            document.querySelector("#changeFormPriceField").addEventListener("change", () => {
-                unlockChangeButton();
-            });
 
 
-            window.addEventListener('click', function (e) {
-                if (overlay.contains(e.target)) {
-                    changeItemInnerForm.reset();
-                    changeItemForm.classList.add("hide");
-                    overlay.classList.add("hide");
-                }
-            });
-        })
-    });
 
-    function unlockChangeButton() {
-        changeBtn.disabled = false;
-    }
-
-    function displayLoadingOverlay() {
-        document.querySelector("#loading-overlay").style.display = "grid";
-    }
-</script>
-
-</div>

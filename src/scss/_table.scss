@@ -17,7 +17,6 @@
     .count{
       color: #000;
     }
-
   }
   .title{
     color: #fff;
@@ -25,48 +24,50 @@
 
 }
 
-table.userTable {
+table.tableTemplate{
   border: 3px solid #000000;
   background-color: #EEE7DB;
   width: 100%;
   text-align: center;
   border-collapse: collapse;
+  margin-bottom: 3rem;
 }
-table.userTable td, table.userTable th {
+table.tableTemplate td, table.tableTemplate th {
   border: 1px solid #AAAAAA;
   padding: 3px 2px;
 }
-table.userTable tbody td {
+table.tableTemplate tbody td {
   font-size: 13px;
 }
-table.userTable tr:nth-child(even) {
+table.tableTemplate tr:nth-child(even) {
   background: #F5CDA5;
 }
-table.userTable thead {
+table.tableTemplate thead {
   background: #FFBA5B;
   border-bottom: 2px solid #444444;
 }
-table.userTable thead th {
+table.tableTemplate thead th {
   font-size: 19px;
   font-weight: bold;
   color: #FFFFFF;
   text-align: center;
   border-left: 2px solid #000000;
 }
-table.userTable thead th:first-child {
+table.tableTemplate thead th:first-child {
   border-left: none;
 }
 
-table.userTable tfoot td {
+table.tableTemplate tfoot td {
   font-size: 13px;
 }
-table.userTable tfoot .links {
+table.tableTemplate tfoot .links {
   text-align: right;
 }
-table.userTable tfoot .links a{
+table.tableTemplate tfoot .links a{
   display: inline-block;
   background: #FFFFFF;
   color: #A40808;
   padding: 2px 8px;
   border-radius: 5px;
 }
+
