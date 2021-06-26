@@ -51,31 +51,31 @@ class ShopDataBaseHandler extends DataBaseHandler
         return Row::convert($resultData, $rowType);
     }
 
-    public function getByAssociation(TableType $fromTable, string $where, string $equals, string $getThis)
-    {
-        $rowType = new RowType($fromTable->value);
-        $this->connection->select_db($this->dataBaseName);
-        $resultData = $this->connection->query(ShopDataBaseQueryBuilder::getByWhere($fromTable));
-        return Row::convert($resultData, $rowType);
-    }
-
     public function getAll(TableType $fromTable): Table
     {
         $rowCollection = array();
         $rowType = new RowType($fromTable->value);
         $this->connection->select_db($this->dataBaseName);
         $result = $this->connection->query(ShopDataBaseQueryBuilder::getAll($fromTable));
-        while ($resultData = $result->fetch_assoc()) {
-            array_push($rowCollection, Row::convert($resultData, $rowType));
+        if ($result) {
+            while ($resultData = $result->fetch_assoc()) {
+                array_push($rowCollection, Row::convert($resultData, $rowType));
+            }
         }
         return Table::convert($rowCollection, $fromTable);
     }
 
     public function update(TableType $fromTable, int $byId, $key, $newValue)
     {
-        $this->connection->select_db($fromTable->value);
+        $this->connection->select_db($this->dataBaseName);
         $this->connection->query(ShopDataBaseQueryBuilder::update($fromTable, $byId, $key, $newValue));
     }
+
+    public function delete(TableType $fromTable, int $byId){
+        $this->connection->select_db($this->dataBaseName);
+        $this->connection->query(ShopDataBaseQueryBuilder::delete($fromTable, $byId));
+    }
+
 
     public static function canConnectToDatabase(string $host, string $user, string $pwd): bool
     {

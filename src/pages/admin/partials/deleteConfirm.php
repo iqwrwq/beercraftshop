@@ -21,7 +21,7 @@ if (isset($_GET["id"])) {
 <div class="page-offline">
     <div class="box-header--out-of-box" style="color: #A40808">Delete <?php echo $productRow->getName()?>?</div>
     <div class="box-content">
-        <button onclick="window.location='/BeerCraftShop/public/admin/delete.php?id='" class="delete-btn">Delete</button>
+        <button onclick="window.location='/BeerCraftShop/src/modules/database/submit/delete.php?id=<?php echo $_GET["id"] ?>'" class="delete-btn">Delete</button>
         <button onclick="window.location='/BeerCraftShop/public/admin/'"  class="cancel-btn">Cancel</button></div>
 </div>
 <?php if(!$shopConfig->getFastMode()):?>

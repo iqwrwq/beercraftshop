@@ -280,27 +280,25 @@
   flex-direction: row;
   justify-content: space-between;
 }
-.page-offline .box-content .cancel-btn, delete-confirm .box-content .cancel-btn {
-  background-color: #e04c23;
-  border-radius: 10px;
-  font-size: 25px;
-  width: 250px;
-  padding: 1rem;
+.page-offline .box-content .cancel-btn, .page-offline .box-content .delete-btn, delete-confirm .box-content .cancel-btn, delete-confirm .box-content .delete-btn {
+  padding: 15px;
+  background-color: #D8000C;
+  transition: all 0.1s;
+  font-size: 15px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 20px;
+  width: 200px;
+  justify-self: center;
 }
-.page-offline .box-content .cancel-btn:hover, delete-confirm .box-content .cancel-btn:hover {
+.page-offline .box-content .cancel-btn:hover, .page-offline .box-content .delete-btn:hover, delete-confirm .box-content .cancel-btn:hover, delete-confirm .box-content .delete-btn:hover {
   cursor: pointer;
-  background-color: #d9a6a6;
+  background-color: #f11c28;
 }
-.page-offline .box-content .delete-btn, delete-confirm .box-content .delete-btn {
-  background-color: #bb1515;
-  border-radius: 10px;
-  font-size: 25px;
-  width: 250px;
-  padding: 1rem;
-}
-.page-offline .box-content .delete-btn:hover, delete-confirm .box-content .delete-btn:hover {
-  cursor: pointer;
-  background-color: #e30909;
+.page-offline .box-content .cancel-btn:focus, .page-offline .box-content .delete-btn:focus, delete-confirm .box-content .cancel-btn:focus, delete-confirm .box-content .delete-btn:focus {
+  border: none rgba(229, 103, 23, 0.8);
+  box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+  outline: 0 none;
 }
 .page-offline img, delete-confirm img {
   width: 150px;
@@ -993,6 +991,9 @@ table.tableTemplate tfoot .links a {
 .admin-page-nav .navigation-bar--item {
   font-family: Arial;
   display: flex;
+  background-color: #343a40;
+  outline: unset;
+  border: none;
   justify-content: center;
   align-items: center;
   flex-direction: row;
@@ -1142,6 +1143,77 @@ table.tableTemplate tfoot .links a {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.add-item-form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  border: 3px solid #000;
+  border-radius: 5px;
+  box-shadow: 5px 5px black;
+  background-color: #fff;
+  z-index: 999;
+}
+.add-item-form form {
+  display: flex;
+  flex-direction: column;
+}
+.add-item-form form .form-header {
+  display: flex;
+  flex-direction: column;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.add-item-form form .form-header i {
+  margin-bottom: 10px;
+  color: #fe981b;
+  font-size: 30px;
+  align-self: center;
+  border: solid 2px black;
+  padding: 0.5rem;
+  border-radius: 15px;
+  box-shadow: 3px 3px black;
+}
+.add-item-form form .form-content {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+}
+.add-item-form form .form-content img {
+  width: 200px;
+}
+.add-item-form form .form-content input {
+  padding: 15px;
+  transition: all 0.1s;
+}
+.add-item-form form .form-content input:focus {
+  border: none rgba(229, 103, 23, 0.8);
+  box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+  outline: 0 none;
+}
+.add-item-form form .form-content input[type=submit], .add-item-form form .form-content .cancel-btn {
+  font-size: 15px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 20px;
+  width: 150px;
+  transition: all ease 0.3s;
+  justify-self: center;
+}
+.add-item-form form .form-content input[type=submit]:hover, .add-item-form form .form-content .cancel-btn:hover {
+  cursor: pointer;
+}
+.add-item-form form .form-content .cancel-btn {
+  padding: 15px;
+  transition: all 0.1s;
+}
+.add-item-form form .form-content .cancel-btn:focus {
+  border: none rgba(229, 103, 23, 0.8);
+  box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+  outline: 0 none;
 }
 
 * {

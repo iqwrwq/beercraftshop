@@ -56,14 +56,14 @@ class ShopDataBaseQueryBuilder
         return "SELECT * from " . $table->value;
     }
 
-    public static function delete(Table $fromTable, $id)
+    public static function delete(TableType $table, $id)
     {
-
+        return "DELETE FROM " . $table->value . " WHERE id='$id'";
     }
 
     public static function update(TableType $table, int $id, string $key, string $value): string
     {
-        return "UPDATE " . $table . "SET " . $key . "='" . $value . "' WHERE id='$id'";
+        return "UPDATE " . $table->value . " SET " . $key . "='" . $value . "' WHERE id='$id'";
     }
 
     public function setUpDataBaseQuery(string $db_name, array $table_data, string $table_name): string

@@ -1,13 +1,13 @@
 {
     "config": {
         "database": {
-            "host": "localhost",
-            "user": "root",
-            "pwd": "root",
+            "host": "",
+            "user": "",
+            "pwd": "",
             "db_name": "beer_craft_shop_database"
         },
-        "installed": "true",
-        "storefront": "off",
+        "installed": "false",
+        "storefront": "on",
         "fast_mode": "false"
     },
     "tables": {
