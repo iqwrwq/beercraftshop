@@ -1,113 +1,132 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/DataBaseController.php";
 
-$properties = PropertiesController::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-$dataBaseController = new \BeerCraftShop\src\modules\database\DataBaseController($properties["db_host"], $properties["db_user"], $properties["db_pwd"], $properties["db_name"]);
-$products = $dataBaseController->getAllProducts();
+use config\ShopConfig;
+use modules\database\ShopDataBaseHandler;
+use modules\database\tables\TableType;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/TableType.php";
+
+
+$shopConfig = new ShopConfig();
+$shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
+
+$productTableType = new TableType(TableType::PRODUCT_TABLE);
+$productTable = $shopDataBaseHandler->getAll($productTableType);
+
+$userTableType = new TableType(TableType::USER_TABLE);
+$userTable = $shopDataBaseHandler->getAll($userTableType);
 ?>
 
-<div class="main-site-wrapper">
+<div class="admin-page-wrapper">
 
-    <div class="admin-page" id="adminPage">
-        <?php require_once "partials/adminPageNav.php"?>
+    <?php require_once "partials/adminPageNav.php" ?>
 
-        <?php require_once "partials/adminGraphs.php"?>
-
-        <div class="content">
-            <?php
-            echo "<table class='inventory-overview'><tr><th>ID</th><th>Name</th><th>Description</th><th>Img_Url</th><th>Alcohol_content</th><th>Price</th></tr>";
-            while ($product = mysqli_fetch_array($products)) {
-                echo "<tr class='item-row'><td class='nameField'>" . $product["id"] . "</td><td class='descriptionField'>" . $product["name"] . "</td><td class='priceField'>" . substr($product["description"], 0, 55) . "[...]" . "</td><td class='priceField'>" . $product["img_url"] . "</td><td class='priceField'>" . $product["alcohol_content"] . "</td><td class='priceField'>" . $product["price"] . "</td></tr>";
-            }
-            echo "<tr class='add-row' id='add-btn'><td colspan=6><i class='fas fa-plus-square' ></i></td></tr></table>";
-
-            ?>
+    <section class="upper-section">
+        <div class="user-table">
+            <div class="table--header table-details">
+                <div class="table-name"><span class="title">Users</span></div>
+                <div class="table-count"><span class="count"><?php echo $userTable->count() ?></span></div>
+            </div>
+            <div class="user-table--content">
+                <table class="tableTemplate userTable">
+                    <thead>
+                    <tr>
+                        <?php foreach ($userTable->getFormat() as $userHead): ?>
+                            <th><?php echo $userHead ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($userTable->getRows() as $userRow): ?>
+                        <tr>
+                            <td><?php echo $userRow->getId() ?></td>
+                            <td><?php echo $userRow->getFirstName() ?></td>
+                            <td><?php echo $userRow->getLastName() ?></td>
+                            <td><?php echo $userRow->getEmail() ?></td>
+                            <td><?php echo $userRow->getPassword() !== null ? "true" : "false" ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                    </tr>
+                </table>
+            </div>
         </div>
-    </div>
+
+        <div class="config-panel">
+            <form class="config-panel--item" method="post" action="/BeerCraftShop/src/config/ShopConfig.php">
+                <label>deactivate/activate storefront</label>
+                <button name="storeFrontToggle" type="submit" class="toggle-btn">
+                    <i class="fas fa-toggle-on <?php echo $shopConfig->getIsStoreFrontOpen() ? "on" : "off" ?>"></i>
+                </button>
+            </form>
+            <form class="config-panel--item" method="post" action="/BeerCraftShop/src/config/ShopConfig.php">
+                <label>Fast Modus</label>
+                <button name="fastModeToggle" type="submit" class="toggle-btn">
+                    <i class="fas fa-toggle-on <?php echo $shopConfig->getFastMode() ? "on" : "off" ?>"></i>
+                </button>
+            </form>
+        </div>
+    </section>
 
 
-    <div class="overlay hide" id="overlay"></div>
+    <section class="content-section">
+        <div class="table--header table-details">
+            <div class="table-name"><span class="title">Products</span></div>
+            <button id="add-product-btn"
+                    onclick="window.location='/BeerCraftShop/public/admin/edit.php'">
+                <i class="fas fa-plus-square"></i>
+                <span class="txt">create new product</span>
+            </button>
+            <div class="table-count"><span class="count"><?php echo $productTable->count() ?></span></div>
+        </div>
+        <table class="tableTemplate productsTable">
+            <thead>
+            <tr>
+                <th></th>
+                <?php foreach ($productTable->getFormat() as $productHead): ?>
+                    <th><?php echo $productHead ?></th>
+                <?php endforeach; ?>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
 
-    <?php require_once "partials/addItemForm.php"?>
-
-    <?php require_once "partials/changeItemForm.php"?>
-
-    <div id="loading-overlay">
-        <img id="loading-gif" src="/BeerCraftShop/public/resources/images/loading.gif" alt="funny GIF" width="100%">
-    </div>
-
-    <script>
-        addRowButton = document.querySelector("#add-btn");
-        overlay = document.querySelector("#overlay");
-        addItemForm = document.querySelector("#add-item-form");
-        addItemInnerForm = document.querySelector("#inner-form");
-
-        addRowButton.addEventListener("click", () => {
-            addItemForm.classList.remove("hide");
-            overlay.classList.remove("hide");
-            window.addEventListener('click', function (e) {
-                if (overlay.contains(e.target)) {
-                    addItemInnerForm.reset();
-                    addItemForm.classList.add("hide");
-                    overlay.classList.add("hide");
-                }
-            });
-        })
-        changeBtn = document.querySelector("#changeBtn");
-        changeItemForm = document.querySelector("#change-item-form");
-        changeItemInnerForm = document.querySelector("#inner-change-form");
-        itemRows = document.querySelectorAll('.item-row');
-        itemRows.forEach(element => {
-            element.addEventListener("click", () => {
-                changeItemForm.classList.remove("hide");
-                overlay.classList.remove("hide");
-                changeBtn.disabled = true;
-                document.querySelector("#oldNameField").value = element.cells[1].innerHTML;
-                document.querySelector("#oldDescField").value = element.cells[2].innerHTML;
-                document.querySelector("#oldImageField").value = element.cells[3].innerHTML;
-                document.querySelector("#oldAlcoholContentField").value = element.cells[4].innerHTML;
-                document.querySelector("#oldPriceField").value = element.cells[5].innerHTML;
-
-                document.querySelector("#changeFormNameField").value = element.cells[1].innerHTML;
-                document.querySelector("#changeFormDescField").value = element.cells[2].innerHTML;
-                document.querySelector("#selectedItemImage").src = "/BeerCraftShop/public/resources/images/products/" + element.cells[3].innerHTML + ".jpg";
-                document.querySelector("#changeFormAlcoholContentField").value = element.cells[4].innerHTML;
-                document.querySelector("#changeFormPriceField").value = element.cells[5].innerHTML;
-                document.querySelector("#changeFormNameField").addEventListener("change", () => {
-                    unlockChangeButton();
-                });
-                document.querySelector("#changeFormDescField").addEventListener("change", () => {
-                    unlockChangeButton()
-                });
-                document.querySelector("#changeFormImageField").addEventListener("change", () => {
-                    unlockChangeButton()
-                });
-                document.querySelector("#changeFormAlcoholContentField").addEventListener("change", () => {
-                    unlockChangeButton()
-                });
-                document.querySelector("#changeFormPriceField").addEventListener("change", () => {
-                    unlockChangeButton();
-                });
-
-
-                window.addEventListener('click', function (e) {
-                    if (overlay.contains(e.target)) {
-                        changeItemInnerForm.reset();
-                        changeItemForm.classList.add("hide");
-                        overlay.classList.add("hide");
-                    }
-                });
-            })
-        });
-
-        function unlockChangeButton() {
-            changeBtn.disabled = false;
-        }
-
-        function displayLoadingOverlay() {
-            document.querySelector("#loading-overlay").style.display = "grid";
-        }
-    </script>
+            <tbody>
+            <?php foreach ($productTable->getRows() as $productRow): ?>
+                <tr>
+                    <td><img style="width: 50px; height: 50px"
+                             src="/BeerCraftShop/public/resources/images/products/<?php echo $productRow->getImgUrl() ?>.jpg"
+                             alt="none"></td>
+                    <td><?php echo $productRow->getId() ?></td>
+                    <td><?php echo $productRow->getName() ?></td>
+                    <td><?php echo $productRow->getDescription() !== "" ? "..." : "none" ?></td>
+                    <td><?php echo $productRow->getPrice() ?>€</td>
+                    <td><?php echo $productRow->getImgUrl() ?></td>
+                    <td><?php echo $productRow->getPercentage() ?>%</td>
+                    <td>
+                        <button id="edit-product-btn"
+                                onclick="window.location='/BeerCraftShop/public/admin/edit.php?id=<?php echo $productRow->getId() ?>'">
+                            <i class="fas fa-edit"></i>
+                            <span class="txt">Edit</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id="delete-product-btn"
+                                onclick="window.location='/BeerCraftShop/public/admin/delete.php?id=<?php echo $productRow->getId() ?>'">
+                            <i class="fas fa-trash-alt"></i>
+                            <span class="txt">Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+            </tr>
+        </table>
+    </section>
 
 </div>
+
+
+

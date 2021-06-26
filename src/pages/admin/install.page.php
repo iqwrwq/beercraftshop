@@ -11,7 +11,7 @@
         endif;
         unset($_SESSION['INSTALL_ERROR']);
     ?>
-    <form action="/BeerCraftShop/src/modules/install/Installer.php"
+    <form action="/BeerCraftShop/src/modules/install/ShopInstaller.php"
           method="post" onsubmit="resetBody()">
         <div class="install-database-form ">
             <h3>

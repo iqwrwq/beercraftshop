@@ -1,4 +1,4 @@
-.page-offline{
+.page-offline,delete-confirm{
   background-color: #fff;
   position: absolute;
   top: 50%;
@@ -9,6 +9,7 @@
   padding: 3rem;
   border: solid 3px #000;
   box-shadow: 5px 5px black;
+  min-width: 600px;
   .box-header{
     position: absolute;
     align-self: center;
@@ -20,6 +21,49 @@
     font-weight: bolder;
     font-size: 45px;
     text-align: center;
+    &--out-of-box{
+      border: solid 3px #000;
+      box-shadow: 5px 5px black;
+      position: absolute;
+      align-self: center;
+      justify-self:center ;
+      top: -150px;
+      padding: 2rem;
+      border-radius: 5px;
+      color: #94e903;
+      font-weight: bolder;
+      font-size: 30px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+  }
+  .box-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .cancel-btn, .delete-btn{
+      padding: 15px;
+      background-color: #D8000C;
+      transition: all .1s;
+      font-size: 15px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 20px;
+      width: 200px;
+      justify-self: center;
+      &:hover {
+        cursor: pointer;
+        background-color: #f11c28;
+      }
+      &:focus {
+        border: none rgba(229, 103, 23, 0.8);
+        box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 8px rgba(229, 103, 23, 0.6);
+        outline: 0 none;
+      }
+    }
+
   }
   img {
     width: 150px;

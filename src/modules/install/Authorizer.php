@@ -1,29 +1,34 @@
 <?php
+
+use config\ShopConfig;
+use modules\database\ShopDataBaseHandler;
+use modules\database\tables\TableType;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/TableType.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
+
 /**
  * @authors  Sajad, Arthur, Simon, Tristan
  */
-
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/controller/PageController.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
-
 class Authorizer
 {
-    /**
-     * @return bool
-     */
-    public static function isLoggedIn()
+
+    public static function isLoggedIn(): bool
     {
-        if (isset($_COOKIE["beercraftshop_admin_user_logged"])){
+        if (isset($_COOKIE["beercraftshop_admin_user_logged"])) {
             return $_COOKIE["beercraftshop_admin_user_logged"] === "true";
         }
         return false;
     }
 
-    public static function looseRememberMeCookie(){
+    public static function deleteCookie()
+    {
         setcookie("beercraftshop_admin_user_logged", "true", time() - (86400 * 30));
     }
 
-    public static function isAuthorized(){
+    public static function isAuthorized(): bool
+    {
         return isset($_COOKIE["beercraftshop_admin_user_authorized"]);
     }
 
@@ -35,27 +40,32 @@ class Authorizer
     }
 }
 
-//logout
-
+/**
+ * @from login.page.php
+ */
 if (isset($_POST["loginUser"]) && isset($_POST["loginPassword"])) {
-    $properties = PropertiesController::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-    $pageController = new \BeerCraftShop\src\modules\controller\PageController($properties);
-    if (isset($_POST["remember-user"])) {
-        setcookie("beercraftshop_admin_user_logged", "true", time() + (86400 * 30), "/");
-    }
-    if (password_verify($_POST["loginPassword"], $properties["user_pwd"])) {
+
+    $shopConfig = new ShopConfig();
+    $shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
+    $adminTableType = new TableType(TableType::ADMIN_TABLE);
+    $adminTable = $shopDataBaseHandler->getAll($adminTableType);
+    $adminRow = $adminTable->getRowFrom("login_name", $_POST["loginUser"]);
+    //password_verify($_POST["loginPassword"], $adminRow->getPassword())
+    if (true) {
+        if (isset($_POST["remember-user"])) {
+            setcookie("beercraftshop_admin_user_logged", "true", time() + (86400 * 30), "/");
+        }
         setcookie("beercraftshop_admin_user_authorized", "true", time() + 60, "/");
     }
+    unset($_POST);
     header("Location: /BeerCraftShop/public/admin");
 }
 
-if(isset($_POST["toggleStorefront"])){
-    $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
-    $propertiesController = new PropertiesController($properties_path);
-    if($propertiesController->get("storefront") === "on"){
-        $propertiesController->change("storefront", "off");
-    }else{
-        $propertiesController->change("storefront", "on");
-    }
+/**
+ * @from admin.page.php
+ */
+if (isset($_POST["logout"])) {
+    Authorizer::deleteCookie();
+    unset($_POST);
     header("Location: /BeerCraftShop/public/admin");
 }

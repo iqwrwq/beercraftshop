@@ -1,10 +1,19 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
-    require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/DataBaseController.php";
 
-    $properties = PropertiesController::getContent($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-    $dataBaseController = new \BeerCraftShop\src\modules\database\DataBaseController($properties["db_host"], $properties["db_user"], $properties["db_pwd"], $properties["db_name"]);
-    $products = $dataBaseController->getAllProducts();
+use config\ShopConfig;
+use modules\database\ShopDataBaseHandler;
+use modules\database\tables\TableType;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/TableType.php";
+
+
+$shopConfig = new ShopConfig();
+$shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
+$productTableType = new TableType(TableType::PRODUCT_TABLE);
+$productTable = $shopDataBaseHandler->getAll($productTableType);
+
 ?>
 <div class="main-site-wrapper">
     <div class="content">
@@ -28,10 +37,23 @@
                 </div>
             </div>
             <div class="item-showcase">
-                <?php if ($products):
-                    while ($product = mysqli_fetch_array($products)):?>
-                        <?php require $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/productItem.php" ?>
-                    <?php endwhile;endif; ?>
+
+                <?php if ($productTable):
+                    foreach ($productTable->getRows() as $productRow):?>
+                        <div class="item-chart">
+                            <div class="item-head-show">
+                                <img src="/BeerCraftShop/public/resources/images/products/<?php echo $productRow->getImgUrl() ?>.jpg"
+                                     alt="oops">
+                                <span class="item-prz"><?php echo $productRow->getPercentage() ?>%</span>
+                                <div class="item-buying-info">
+                                    <h1 class="item-name"><?php echo $productRow->getName() ?></h1>
+                                    <p class="item-price"><?php echo $productRow->getPrice() ?>€</p>
+                                </div>
+                            </div>
+                            <span class="item-text"><?php echo $productRow->getDescription() ?></span>
+                            <input class="item-card-btn" type="button" value="Add">
+                        </div>
+                    <?php endforeach;endif; ?>
             </div>
         </div>
         <?php require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/footer.php" ?>

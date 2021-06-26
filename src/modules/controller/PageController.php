@@ -1,80 +1,92 @@
 <?php
-/**
- * @authors  Sajad, Arthur, Simon, Tristan
- */
 
-namespace BeerCraftShop\src\modules\controller;
-
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/install/Installer.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/properties/PropertiesController.php";
+namespace modules\controller;
 
 use Authorizer;
-use Installer;
+use config\ShopConfig;
+use modules\install\ShopInstaller;
 
-define('HOME_PAGE', 'home');
-define('HOME_PAGE_REQUEST_URI', '/BeerCraftShop/public/');
-define('ADMIN_PAGE', 'admin');
-define('ADMIN_PAGE_REQUEST_URI', '/BeerCraftShop/public/admin/');
-define('LOAD_ERROR_PAGE', 'loadError');
-define('INSTALL_PAGE', 'install');
-define('OUT_OF_SERVICE_PAGE', 'outOfService');
-define('LOGIN_PAGE', 'login');
-define('__HEADER__', $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages/public/partials/head.php");
-define('__PAGES__', $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/pages");
+require_once "PageBuilder.php";
+require_once "Page.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/install/ShopInstaller.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/install/Authorizer.php";
 
-class PageController
+class PageController extends PageBuilder
 {
-    private $pages;
-    private $properties_path;
 
-    public function __construct($properties_path)
+    public function index(string $from)
     {
-        $this->properties_path = $properties_path;
-        $this->pages = [
-            "home" => __PAGES__ . DIRECTORY_SEPARATOR . "public/homepage/home.page.php",
-            "admin" => __PAGES__ . DIRECTORY_SEPARATOR . "admin/admin.page.php",
-            "install" => __PAGES__ . DIRECTORY_SEPARATOR . "admin/install.page.php",
-            "loadError" => __PAGES__ . DIRECTORY_SEPARATOR . "public/content.page.php",
-            "outOfService" => __PAGES__ . DIRECTORY_SEPARATOR . "service/outOfService.page.php",
-            "login" => __PAGES__ . DIRECTORY_SEPARATOR . "admin/login.page.php",
-        ];
-    }
-
-    public function securedLogin()
-    {
-        require_once __HEADER__;
-        require_once $this->pages[ADMIN_PAGE];
-    }
-
-    /**
-     * @param $request_root
-     */
-    public function route($request_root)
-    {
-        if (Installer::check($this->properties_path)) {
-            require_once __HEADER__;
-            if ($request_root == ADMIN_PAGE_REQUEST_URI) {
-                if (Authorizer::isLoggedIn()) {
-                    require_once $this->pages[ADMIN_PAGE];
-                }elseif(Authorizer::isAuthorized()){
-                    require_once $this->pages[ADMIN_PAGE];
-                } else {
-                    require_once $this->pages[LOGIN_PAGE];
-                }
-            } elseif ($request_root == HOME_PAGE_REQUEST_URI) {
-                $propertiesController = new \PropertiesController($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json");
-                if($propertiesController->get("storefront") === "on"){
-                    require_once $this->pages[HOME_PAGE];
-                }else{
-                    require_once $this->pages[OUT_OF_SERVICE_PAGE];
-                }
-
-            } else {
-                require_once $this->pages[LOAD_ERROR_PAGE];
-            }
+        if (ShopInstaller::shopIsInstalled()) {
+            $this->route($from);
         } else {
-            require_once __HEADER__;
-            require_once $this->pages[INSTALL_PAGE];
+            $this->startInstall();
         }
+    }
+
+    private function route(string $from)
+    {
+        if ($from === "/BeerCraftShop/public/admin/") {
+            $this->routeToAdminPage();
+        } elseif ($from === "/BeerCraftShop/public/") {
+            $this->routeToHomePage();
+        } elseif ($from === "/BeerCraftShop/public/about.php") {
+            $aboutPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/about.page.php");
+            $this->build("BeerCraft/About", $aboutPage);
+        } elseif ($from === "/BeerCraftShop/public/notice.php") {
+            $noticePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/notice.page.php");
+            $this->build("BeerCraft/Notice", $noticePage);
+        } elseif ($from === "/BeerCraftShop/public/contact.php") {
+            $contactPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/contact.page.php");
+            $this->build("BeerCraft/Contact", $contactPage);
+        } elseif ($from === "/BeerCraftShop/public/admin/edit.php") {
+            $contactPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/productEditor.page.php");
+            $this->build("BeerCraft/Edit", $contactPage);
+        } elseif (preg_match("/\/BeerCraftShop\/public\/admin\/edit.php\?id=\d*/", $from)) {
+            $contactPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/productEditor.page.php");
+            $this->build("BeerCraft/Edit", $contactPage);
+        } elseif (preg_match("/\/BeerCraftShop\/public\/admin\/delete.php\?id=\d*/", $from)) {
+            $contactPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/partials/deleteConfirm.php");
+            $this->build("Delete Item ?", $contactPage);
+        } else {
+            $contactPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "service/couldNotLoad.page.php");
+            $this->build("BeerCraft/Not Found", $contactPage);
+        }
+    }
+
+    private function routeToAdminPage()
+    {
+        if (Authorizer::isLoggedIn()) {
+            $this->continueToAdmin();
+        } elseif (Authorizer::isAuthorized()) {
+            $this->continueToAdmin();
+        } else {
+            $adminLoginPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/login.page.php");
+            $this->build("BeerCraft/Login", $adminLoginPage);
+        }
+    }
+
+    private function continueToAdmin()
+    {
+        $adminPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/admin.page.php");
+        $this->build("BeerCraft/Admin", $adminPage);
+    }
+
+    private function startInstall()
+    {
+        $installPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/install.page.php");
+        $this->build("BeerCraft/Installation", $installPage);
+    }
+
+    private function routeToHomePage()
+    {
+        $shopConfig = new ShopConfig();
+        if ($shopConfig->getIsStoreFrontOpen()) {
+            $homePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/home.page.php");
+            $this->build("BeerCraft/Shop", $homePage);
+        } else {
+            $outOfServicePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "service/outOfService.page.php");
+            $this->build("BeerCraft/Shop is out of Service", $outOfServicePage);
+        }
+
     }
 }
