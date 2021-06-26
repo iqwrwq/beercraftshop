@@ -3,21 +3,22 @@
 
 namespace modules\database\rows;
 
+require_once "Row.php";
 
 class UserRow extends Row
 {
     private $firstName;
     private $lastName;
     private $email;
-    private $userPassword;
+    private $password;
 
     public function __construct(array $data)
     {
-            parent::__construct($data["id"], $data);
+            parent::__construct((int)$data["id"], $data);
             $this->firstName = $data["firstname"];
             $this->lastName = $data["lastname"];
             $this->email = $data["email"];
-            $this->userPassword = $data["user_password"];
+            $this->password = $data["password"];
     }
 
     public function getFirstName()
@@ -35,18 +36,8 @@ class UserRow extends Row
         return $this->email;
     }
 
-    public function getUserPassword()
+    public function getPassword()
     {
-        return $this->userPassword;
-    }
-
-    public static function checkFormat(array $providedData): bool
-    {
-        return
-            isset($providedData["id"]) &&
-            isset($providedData["firstname"]) &&
-            isset($providedData["lastname"]) &&
-            isset($providedData["email"]) &&
-            isset($providedData["user_password"]);
+        return $this->password;
     }
 }

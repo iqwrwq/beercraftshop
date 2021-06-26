@@ -4,6 +4,7 @@
 namespace modules\database;
 
 
+use config\ShopConfig;
 use modules\database\rows\Row;
 use modules\database\tables\Table;
 use modules\database\tables\TableType;
@@ -16,35 +17,43 @@ class ShopDataBaseQueryBuilder
         return "CREATE DATABASE IF NOT EXISTS " . $databaseName;
     }
 
-    public static function createTable(string $database, string $tableName, array $tableData): string
+    public static function createTable(TableType $table): string
     {
+        $shopConfig = new ShopConfig();
+        $tables = $shopConfig->getTables();
+        $database = $shopConfig->getDataBaseConfig()["db_name"];
         $tableSchema = "";
-        foreach ($tableData as $key => $fieldType) {
+
+        foreach ($tables[$table->value] as $key => $fieldType) {
             $tableSchema .= $key . " $fieldType,";
         }
         $tableSchema = rtrim($tableSchema, ", ");
-        return "CREATE TABLE IF NOT EXISTS " . $database . $tableName($tableSchema);
+        return "CREATE TABLE IF NOT EXISTS " . $database . "." . $table->value . "(" . $tableSchema . ")";
     }
 
-    public static function insert(Table $table, Row $row): string
+    public static function insert(TableType $table, Row $row): string
     {
-        $insertItemSql = "INSERT INTO " . $table->getName() . " VALUES(";
+        $insertItemSql = "INSERT INTO " . $table->value . " VALUES(";
         foreach ($row->getData() as $key => $field) {
-            $insertItemSql .= ($key === "id" ? "NULL" : "'" . $field . "'") . ",";
+            if ($key === "password") {
+                $insertItemSql .= "'" . password_hash($key, PASSWORD_DEFAULT) . "',";
+            } else {
+                $insertItemSql .= ($key === "id" ? "NULL" : "'" . $field . "'") . ",";
+            }
         }
         $insertItemSql = rtrim($insertItemSql, ", ");
         $insertItemSql .= ")";
         return $insertItemSql;
     }
 
-    public static function get(Table $table, int $id): string
+    public static function get(TableType $table, int $id): string
     {
-        return "SELECT * from " . $table->getName() . " WHERE id=" . $id;
+        return "SELECT * from " . $table->value . " WHERE id=" . $id;
     }
 
-    public static function getAll(Table $table): string
+    public static function getAll(TableType $table): string
     {
-        return "SELECT * from " . $table->getName();
+        return "SELECT * from " . $table->value;
     }
 
     public static function delete(Table $fromTable, $id)

@@ -3,6 +3,8 @@
 
 namespace modules\database\rows;
 
+require_once "Row.php";
+
 class AdminRow extends Row
 {
     private $loginName;
@@ -10,7 +12,7 @@ class AdminRow extends Row
 
     public function __construct(array $data)
     {
-        parent::__construct($data["id"], $data);
+        parent::__construct((int)$data["id"], $data);
         $this->loginName = $data["login_name"];
         $this->password = $data["password"];
     }
@@ -23,18 +25,5 @@ class AdminRow extends Row
     public function getLoginName()
     {
         return $this->loginName;
-    }
-
-    public static function checkFormat(array $providedData): bool
-    {
-        return
-            isset($providedData["id"]) &&
-            isset($providedData["login_name"]) &&
-            isset($providedData["password"]);
-    }
-
-    public static function convert(array $data): Row
-    {
-        // TODO: Implement convert() method.
     }
 }

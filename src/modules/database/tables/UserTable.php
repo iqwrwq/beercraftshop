@@ -3,8 +3,7 @@
 
 namespace modules\database\tables;
 
-
-use modules\lib\enum;
+require_once "Table.php";
 
 class UserTable extends Table
 {
@@ -13,13 +12,8 @@ class UserTable extends Table
         parent::__construct("users", $rows, new TableType("users"));
     }
 
-    public static function checkFormat(array $providedData): bool
+    function getFormat(): array
     {
-        // TODO: Implement checkFormat() method.
-    }
-
-    public static function convert(): Table
-    {
-        // TODO: Implement convert() method.
+        return array("id", "firstname", "lastname", "email", "password");
     }
 }

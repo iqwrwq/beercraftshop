@@ -3,6 +3,7 @@
 
 namespace modules\database\tables;
 
+require_once "Table.php";
 
 class ProductTable extends Table
 {
@@ -11,13 +12,8 @@ class ProductTable extends Table
         parent::__construct("products", $rows, new TableType("products"));
     }
 
-    public static function checkFormat(array $providedData): bool
+    function getFormat(): array
     {
-        // TODO: Implement checkFormat() method.
-    }
-
-    public static function convert(): Table
-    {
-        // TODO: Implement convert() method.
+        return array("id", "name", "description", "price", "img_url", "percentage");
     }
 }

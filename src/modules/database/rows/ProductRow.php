@@ -3,6 +3,7 @@
 
 namespace modules\database\rows;
 
+require_once "Row.php";
 
 class ProductRow extends Row
 {
@@ -14,7 +15,7 @@ class ProductRow extends Row
 
     public function __construct(array $data)
     {
-        parent::__construct($data["id"], $data);
+        parent::__construct((int)$data["id"], $data);
         $this->name = $data["name"];
         $this->description = $data["description"];
         $this->price = $data["price"];
@@ -47,19 +48,4 @@ class ProductRow extends Row
         return $this->percentage;
     }
 
-    public static function checkFormat(array $providedData): bool
-    {
-        return
-            isset($providedData["id"]) &&
-            isset($providedData["name"]) &&
-            isset($providedData["description"]) &&
-            isset($providedData["price"]) &&
-            isset($providedData["img_url"]) &&
-            isset($providedData["percentage"]);
-    }
-
-    public static function convert(array $data): Row
-    {
-        // TODO: Implement convert() method.
-    }
 }

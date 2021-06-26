@@ -1,8 +1,11 @@
 <?php
+
+use config\ShopConfig;
+use modules\database\ShopDataBaseHandler;
+
 /**
  * @authors  Sajad, Arthur, Simon, Tristan
  */
-
 class Authorizer
 {
     /**
@@ -10,13 +13,14 @@ class Authorizer
      */
     public static function isLoggedIn(): bool
     {
-        if (isset($_COOKIE["beercraftshop_admin_user_logged"])){
+        if (isset($_COOKIE["beercraftshop_admin_user_logged"])) {
             return $_COOKIE["beercraftshop_admin_user_logged"] === "true";
         }
         return false;
     }
 
-    public static function deleteCookie(){
+    public static function deleteCookie()
+    {
         setcookie("beercraftshop_admin_user_logged", "true", time() - (86400 * 30));
     }
 
@@ -37,8 +41,8 @@ class Authorizer
  * @from login.page.php
  */
 if (isset($_POST["loginUser"]) && isset($_POST["loginPassword"])) {
-    $shopConfig = new \config\ShopConfig();
-    $shopDataBaseHandler = new \modules\database\rows\ShopDataBaseHandler($shopConfig->getDataBaseConfig());
+    $shopConfig = new ShopConfig();
+    $shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
     if (isset($_POST["remember-user"])) {
         setcookie("beercraftshop_admin_user_logged", "true", time() + (86400 * 30), "/");
     }
@@ -48,13 +52,15 @@ if (isset($_POST["loginUser"]) && isset($_POST["loginPassword"])) {
     header("Location: /BeerCraftShop/public/admin");
 }
 
-if(isset($_POST["toggleStorefront"])){
-    $properties_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/tmp/properties.json";
-    $propertiesController = new PropertiesDepControllerDep($properties_path);
-    if($propertiesController->get("storefront") === "on"){
-        $propertiesController->change("storefront", "off");
-    }else{
-        $propertiesController->change("storefront", "on");
+/**
+ * @from admin.page.php
+ */
+if (isset($_POST["toggleStorefront"])) {
+    $shopConfig = new ShopConfig();
+    if ($shopConfig->getIsStoreFrontOpen()) {
+        $shopConfig->set("storefront", "off");
+    } else {
+        $shopConfig->set("storefront", "on");
     }
     header("Location: /BeerCraftShop/public/admin");
 }

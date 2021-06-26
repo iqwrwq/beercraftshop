@@ -10,6 +10,7 @@ class ShopConfig
     private $dataBaseConfig;
     private $tables;
     private $isShopInstalled;
+    private $storeFrontStatus;
 
     public function __construct()
     {
@@ -18,6 +19,7 @@ class ShopConfig
         $this->dataBaseConfig = $json["config"]["database"];
         $this->tables = $json["tables"];
         $this->isShopInstalled = $json["config"]["installed"] === "true";
+        $this->storeFrontStatus = $json["config"]["storefront"] === "on";
     }
 
     public function configure(array $data)
@@ -62,6 +64,18 @@ class ShopConfig
     {
         return $this->isShopInstalled;
     }
+    public function getIsStoreFrontOpen(): bool
+    {
+        return $this->storeFrontStatus;
+    }
+
+    public function toggleStoreFront(){
+        if ($this->storeFrontStatus){
+            $this->set("storefront", "off");
+        }else{
+            $this->set("storefront", "on");
+        }
+    }
 
     private function decode()
     {
@@ -74,4 +88,11 @@ class ShopConfig
         file_put_contents($this->configFile, json_encode($json,JSON_PRETTY_PRINT));
     }
 
+}
+
+if (isset($_POST["storeFrontToggle"])){
+    $shopConfig = new ShopConfig();
+    $shopConfig->toggleStoreFront();
+    unset($_POST);
+    header("Location: /BeerCraftShop/public/admin/");
 }

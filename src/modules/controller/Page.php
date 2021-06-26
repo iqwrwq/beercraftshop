@@ -15,20 +15,9 @@ class Page
         $this->self = $file;
     }
 
-    /**
-     * @return string
-     */
     public function getSelf(): string
     {
         return $this->self;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoot(): string
-    {
-        return $this->root;
     }
 }
 

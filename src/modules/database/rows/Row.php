@@ -3,6 +3,9 @@
 
 namespace modules\database\rows;
 
+require_once "ProductRow.php";
+require_once "AdminRow.php";
+require_once "UserRow.php";
 
 abstract class Row
 {
@@ -25,7 +28,14 @@ abstract class Row
         return $this->data;
     }
 
-    abstract public static function checkFormat(array $data): bool;
-
-    abstract public static function convert(array $data): Row;
+    public static function convert(array $data, RowType $type): Row
+    {
+        if ($type == RowType::PRODUCT_ROW) {
+            return new ProductRow($data);
+        } elseif ($type == RowType::ADMIN_ROW) {
+            return new AdminRow($data);
+        } elseif ($type == RowType::USER_ROW) {
+            return new UserRow($data);
+        }
+    }
 }

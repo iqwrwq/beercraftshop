@@ -3,8 +3,8 @@
 
 namespace modules\database\tables;
 
+require_once "UserTable.php";
 
-use modules\database\rows\Row;
 
 abstract class Table
 {
@@ -39,6 +39,12 @@ abstract class Table
         return false;
     }
 
+    public function count(){
+        return sizeof($this->rows);
+    }
+
+    abstract function getFormat(): array;
+
     public function getRowFrom(string $where, string $is)
     {
         foreach ($this->rows as $row) {
@@ -48,8 +54,6 @@ abstract class Table
         }
         return false;
     }
-
-    abstract public static function checkFormat(array $providedData): bool;
 
     public static function convert(array $data, TableType $type): Table
     {

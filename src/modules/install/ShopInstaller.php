@@ -7,13 +7,18 @@ use config\ShopConfig;
 use modules\database\rows\AdminRow;
 use modules\database\rows\ProductRow;
 use modules\database\rows\Row;
+use modules\database\rows\UserRow;
 use modules\database\ShopDataBaseHandler;
 use modules\database\tables\AdminTable;
 use modules\database\tables\ProductTable;
+use modules\database\tables\TableType;
 
 
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/AdminTable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/ProductTable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/rows/AdminRow.php";
 
 class ShopInstaller
 {
@@ -26,29 +31,34 @@ class ShopInstaller
 
     private function initialAdmin(ShopDataBaseHandler $shopDataBaseHandler, array $data)
     {
-        $shopDataBaseHandler->insert(new AdminTable(), new AdminRow(array(
+        $adminTableType = new TableType(TableType::ADMIN_TABLE);
+        $shopDataBaseHandler->insert($adminTableType, new AdminRow(array(
+            "id" => "NULL",
+            "login_name" => "master",
+            "password" => "master"
+        )));
+        $shopDataBaseHandler->insert($adminTableType, new AdminRow(array(
             "id" => "NULL",
             "login_name" => $data["loginName"],
-            "password" => password_hash($data["password"], PASSWORD_DEFAULT)
+            "password" => $data["password"]
         )));
+
     }
 
     private function insertDemoData(ShopDataBaseHandler $shopDataBaseHandler)
     {
-        $json = file_get_contents("https://iqwrwq.github.io/beercraftshop/data/products/products.json");
+        $this->insertDemoProducts($shopDataBaseHandler);
+        $json = file_get_contents("https://iqwrwq.github.io/beercraftshop/data/users/users.json");
         $data = json_decode($json);
-        $product_image_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/public/resources/images/products/";
-        $api_url = "https://iqwrwq.github.io/beercraftshop/data/products/img/";
-        foreach ($data as $product) {
+        foreach ($data as $user) {
             $product_data = array();
-            foreach ($product as $key => $value) {
-                if ($key === "img_url") {
-                    file_put_contents($product_image_path . $value . ".jpg", file_get_contents($api_url . $value . ".jpg"));
-                }
+            foreach ($user as $key => $value) {
                 $product_data[$key] = $value;
             }
-            $shopDataBaseHandler->insert(new ProductTable(), new ProductRow($product_data));
+            $userTableType = new TableType(TableType::USER_TABLE);
+            $shopDataBaseHandler->insert($userTableType, new UserRow($product_data));
         }
+
     }
 
 
@@ -90,10 +100,9 @@ class ShopInstaller
 
     public function initDataBase(ShopConfig $shopConfig, array $data): ShopDataBaseHandler
     {
-        $dataBaseConnection = $shopConfig->getDataBaseConfig();
         $tables = $shopConfig->getTables();
         $shopDataBaseHandler = new ShopDataBaseHandler($data);
-        $shopDataBaseHandler->setupDataBase($dataBaseConnection["db_name"], $tables);
+        $shopDataBaseHandler->setupDataBase($tables);
         return $shopDataBaseHandler;
     }
 
@@ -105,12 +114,31 @@ class ShopInstaller
         return array($data, $shopConfig);
     }
 
-    public function polishInstall(ShopDataBaseHandler $shopDataBaseHandler, $data, $shopConfig)
+    public function polishInstall(ShopDataBaseHandler $shopDataBaseHandler,array $data,ShopConfig $shopConfig)
     {
         $this->initialAdmin($shopDataBaseHandler, $data);
         if ($data["insertDemoData"] === "on") $this->insertDemoData($shopDataBaseHandler);
         $shopConfig->set("installed", "true");
         fopen($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/install.lock", "w");
+    }
+
+    private function insertDemoProducts(ShopDataBaseHandler $shopDataBaseHandler)
+    {
+        $json = file_get_contents("https://iqwrwq.github.io/beercraftshop/data/products/products.json");
+        $data = json_decode($json);
+        $product_image_path = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/public/resources/images/products/";
+        $api_url = "https://iqwrwq.github.io/beercraftshop/data/products/img/";
+        foreach ($data as $product) {
+            $product_data = array();
+            foreach ($product as $key => $value) {
+                if ($key === "img_url") {
+                    file_put_contents($product_image_path . $value . ".jpg", file_get_contents($api_url . $value . ".jpg"));
+                }
+                $product_data[$key] = $value;
+            }
+            $productTableType = new TableType(TableType::PRODUCT_TABLE);
+            $shopDataBaseHandler->insert($productTableType, new ProductRow($product_data));
+        }
     }
 }
 

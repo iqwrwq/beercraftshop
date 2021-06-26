@@ -6,7 +6,8 @@
             "pwd": "root",
             "db_name": "beer_craft_shop_database"
         },
-        "installed": "true"
+        "installed": "true",
+        "storefront": "on"
     },
     "tables": {
         "products": {
@@ -22,7 +23,7 @@
             "firstname": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
             "lastname": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
             "email": "VARCHAR(35) CHARACTER SET utf8 NOT NULL",
-            "user_password": "VARCHAR(125) NOT NULL"
+            "password": "VARCHAR(125) NOT NULL"
         },
         "admins": {
             "id": "INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY",

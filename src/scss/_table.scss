@@ -1,0 +1,72 @@
+.table-details{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  align-items: center;
+  background-color: #343a40;
+  padding: .5rem;
+  .table-count{
+    display: grid;
+    justify-content: center;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: #e1ffff;
+    min-width: 30px;
+    .count{
+      color: #000;
+    }
+
+  }
+  .title{
+    color: #fff;
+  }
+
+}
+
+table.userTable {
+  border: 3px solid #000000;
+  background-color: #EEE7DB;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.userTable td, table.userTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.userTable tbody td {
+  font-size: 13px;
+}
+table.userTable tr:nth-child(even) {
+  background: #F5CDA5;
+}
+table.userTable thead {
+  background: #FFBA5B;
+  border-bottom: 2px solid #444444;
+}
+table.userTable thead th {
+  font-size: 19px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  border-left: 2px solid #000000;
+}
+table.userTable thead th:first-child {
+  border-left: none;
+}
+
+table.userTable tfoot td {
+  font-size: 13px;
+}
+table.userTable tfoot .links {
+  text-align: right;
+}
+table.userTable tfoot .links a{
+  display: inline-block;
+  background: #FFFFFF;
+  color: #A40808;
+  padding: 2px 8px;
+  border-radius: 5px;
+}

@@ -2,6 +2,7 @@
 
 namespace modules\controller;
 
+use config\ShopConfig;
 use modules\install\ShopInstaller;
 
 require_once "PageBuilder.php";
@@ -43,9 +44,11 @@ class PageController extends PageBuilder
 
     private function routeToAdminPage()
     {
-        if (\Authorizer::isLoggedIn()) {
+        //\Authorizer::isLoggedIn()
+        //\Authorizer::isAuthorized()
+        if (true) {
             $this->continueToAdmin();
-        } elseif (\Authorizer::isAuthorized()) {
+        } elseif (true) {
             $this->continueToAdmin();
         } else {
             $adminLoginPage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "admin/login.page.php");
@@ -67,7 +70,14 @@ class PageController extends PageBuilder
 
     private function routeToHomePage()
     {
-        $homePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/home.page.php");
-        $this->build("BeerCraft/Shop", $homePage);
+        $shopConfig = new ShopConfig();
+        if($shopConfig->getIsStoreFrontOpen()){
+            $homePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "public/homepage/home.page.php");
+            $this->build("BeerCraft/Shop", $homePage);
+        }else{
+            $outOfServicePage = new Page($this->pages_root . DIRECTORY_SEPARATOR . "service/outOfService.page.php");
+            $this->build("BeerCraft/Shop is out of Service", $outOfServicePage);
+        }
+
     }
 }

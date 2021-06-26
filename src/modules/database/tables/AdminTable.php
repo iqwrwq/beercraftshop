@@ -1,10 +1,8 @@
 <?php
 
-
 namespace modules\database\tables;
 
-
-use modules\lib\enum;
+require_once "Table.php";
 
 class AdminTable extends Table
 {
@@ -13,9 +11,9 @@ class AdminTable extends Table
         parent::__construct("admins", $rows, new TableType("admins"));
     }
 
-    public static function checkFormat(array $providedData): bool
+    function getFormat(): array
     {
-        // TODO: Implement checkFormat() method.
+        return array("id", "login_name", "password");
     }
 
 }
