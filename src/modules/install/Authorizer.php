@@ -45,10 +45,6 @@ class Authorizer
  */
 if (isset($_POST["loginUser"]) && isset($_POST["loginPassword"])) {
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
     $shopConfig = new ShopConfig();
     $shopDataBaseHandler = new ShopDataBaseHandler($shopConfig->getDataBaseConfig());
     $adminTableType = new TableType(TableType::ADMIN_TABLE);
@@ -61,5 +57,15 @@ if (isset($_POST["loginUser"]) && isset($_POST["loginPassword"])) {
         }
         setcookie("beercraftshop_admin_user_authorized", "true", time() + 60, "/");
     }
+    unset($_POST);
+    header("Location: /BeerCraftShop/public/admin");
+}
+
+/**
+ * @from admin.page.php
+ */
+if (isset($_POST["logout"])) {
+    Authorizer::deleteCookie();
+    unset($_POST);
     header("Location: /BeerCraftShop/public/admin");
 }
