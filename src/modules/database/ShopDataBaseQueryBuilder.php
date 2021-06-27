@@ -6,7 +6,7 @@ namespace modules\database;
 
 use config\ShopConfig;
 use modules\database\rows\Row;
-use modules\database\tables\Table;
+use modules\database\tables\shopTable;
 use modules\database\tables\TableType;
 
 class ShopDataBaseQueryBuilder

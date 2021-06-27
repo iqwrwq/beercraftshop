@@ -5,13 +5,13 @@ namespace modules\database;
 use config\ShopConfig;
 use modules\database\rows\Row;
 use modules\database\rows\RowType;
-use modules\database\tables\Table;
+use modules\database\tables\shopTable;
 use modules\database\tables\TableType;
 
 require_once "DataBaseHandler.php";
 require_once "ShopDataBaseQueryBuilder.php";
 require_once "tables/TableType.php";
-require_once "tables/Table.php";
+require_once "tables/shopTable.php";
 require_once "rows/RowType.php";
 require_once "rows/Row.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
@@ -51,7 +51,7 @@ class ShopDataBaseHandler extends DataBaseHandler
         return Row::convert($resultData, $rowType);
     }
 
-    public function getAll(TableType $fromTable): Table
+    public function getAll(TableType $fromTable): shopTable
     {
         $rowCollection = array();
         $rowType = new RowType($fromTable->value);
@@ -62,7 +62,7 @@ class ShopDataBaseHandler extends DataBaseHandler
                 array_push($rowCollection, Row::convert($resultData, $rowType));
             }
         }
-        return Table::convert($rowCollection, $fromTable);
+        return shopTable::convert($rowCollection, $fromTable);
     }
 
     public function update(TableType $fromTable, int $byId, $key, $newValue)

@@ -9,15 +9,15 @@ use modules\database\rows\ProductRow;
 use modules\database\rows\Row;
 use modules\database\rows\UserRow;
 use modules\database\ShopDataBaseHandler;
-use modules\database\tables\AdminTable;
-use modules\database\tables\ProductTable;
+use modules\database\tables\AdminShopTable;
+use modules\database\tables\ProductShopTable;
 use modules\database\tables\TableType;
 
 
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/config/ShopConfig.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/ShopDataBaseHandler.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/AdminTable.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/ProductTable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/AdminShopTable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/tables/ProductShopTable.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "BeerCraftShop/src/modules/database/rows/AdminRow.php";
 
 class ShopInstaller
